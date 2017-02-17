@@ -1,18 +1,15 @@
 ﻿namespace MongoRepository
 {
+    using MongoDB.Bson;
     using MongoDB.Driver;
-    using MongoDB.Driver.Builders;
+    using MongoDB.Driver.Core.Operations;
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
     // TODO: Code coverage here is near-zero. A new RepoManagerTests.cs class needs to be created and we need to
-    //      test these methods. Ofcourse we also need to update codeplex documentation on this entirely new object.
+    //      test these methods. Ofcourse we also need to update documentation.
     //      This is a work-in-progress.
-
-    // TODO: GetStats(), Validate(), GetIndexes and EnsureIndexes(IMongoIndexKeys, IMongoIndexOptions) "leak"
-    //      MongoDb-specific details. These probably need to get wrapped in MongoRepository specific objects to hide
-    //      MongoDb.
 
     /// <summary>
     /// Deals with the collections of entities in MongoDb. This class tries to hide as much MongoDb-specific details
@@ -27,7 +24,7 @@
         /// <summary>
         /// MongoCollection field.
         /// </summary>
-        private MongoCollection<T> collection;
+        private IMongoCollection<T> collection;
 
         /// <summary>
         /// Initializes a new instance of the MongoRepositoryManager class.
@@ -64,7 +61,7 @@
         /// <value>Returns true when the collection already exists, false otherwise.</value>
         public virtual bool Exists
         {
-            get { return this.collection.Exists(); }
+            get { return this.collection.Database.ListCollections(new ListCollectionsOptions { Filter = new BsonDocument("name", this.Name) }).ToList().Any(); }
         }
 
         /// <summary>
@@ -73,7 +70,7 @@
         /// <value>The name of the collection as Mongo uses.</value>
         public virtual string Name
         {
-            get { return this.collection.Name; }
+            get { return this.collection.CollectionNamespace.CollectionName; }
         }
 
         /// <summary>
@@ -81,7 +78,7 @@
         /// </summary>
         public virtual void Drop()
         {
-            this.collection.Drop();
+            this.collection.Database.DropCollection(this.Name);
         }
 
         /// <summary>
@@ -90,7 +87,7 @@
         /// <returns>Returns true when the repository is capped, false otherwise.</returns>
         public virtual bool IsCapped()
         {
-            return this.collection.IsCapped();
+            return this.GetStats().IsCapped;
         }
 
         /// <summary>
@@ -108,7 +105,8 @@
         /// <param name="keynames">The names of the indexed fields.</param>
         public virtual void DropIndexes(IEnumerable<string> keynames)
         {
-            this.collection.DropIndex(keynames.ToArray());
+            foreach (var k in keynames)
+                this.collection.Indexes.DropOne(k);
         }
 
         /// <summary>
@@ -116,7 +114,7 @@
         /// </summary>
         public virtual void DropAllIndexes()
         {
-            this.collection.DropAllIndexes();
+            this.collection.Indexes.DropAll();
         }
 
         /// <summary>
@@ -172,32 +170,15 @@
         /// </remarks>
         public virtual void EnsureIndexes(IEnumerable<string> keynames, bool descending, bool unique, bool sparse)
         {
-            var ixk = new IndexKeysBuilder();
-            if (descending)
+            foreach (var k in keynames)
             {
-                ixk.Descending(keynames.ToArray());
+                var opt = new CreateIndexOptions { Unique = unique, Sparse = sparse };
+                var builder = Builders<T>.IndexKeys;
+                if (descending)
+                    this.collection.Indexes.CreateOne(builder.Descending(k), opt);
+                else
+                    this.collection.Indexes.CreateOne(builder.Descending(k), opt);
             }
-            else
-            {
-                ixk.Ascending(keynames.ToArray());
-            }
-
-            this.EnsureIndexes(
-                ixk,
-                new IndexOptionsBuilder().SetUnique(unique).SetSparse(sparse));
-        }
-
-        /// <summary>
-        /// Ensures that the desired indexes exist and creates them if they don't exist.
-        /// </summary>
-        /// <param name="keys">The indexed fields.</param>
-        /// <param name="options">The index options.</param>
-        /// <remarks>
-        /// This method allows ultimate control but does "leak" some MongoDb specific implementation details.
-        /// </remarks>
-        public virtual void EnsureIndexes(IMongoIndexKeys keys, IMongoIndexOptions options)
-        {
-            this.collection.CreateIndex(keys, options);
         }
 
         /// <summary>
@@ -217,7 +198,8 @@
         /// <returns>Returns true when the indexes exist, false otherwise.</returns>
         public virtual bool IndexesExists(IEnumerable<string> keynames)
         {
-            return this.collection.IndexExists(keynames.ToArray());
+            var ix = this.collection.Indexes.List().ToList();
+            return keynames.All(k => ix.Contains(BsonValue.Create(k)));
         }
 
         /// <summary>
@@ -225,7 +207,7 @@
         /// </summary>
         public virtual void ReIndex()
         {
-            this.collection.ReIndex();
+            this.collection.Database.RunCommand(new BsonDocumentCommand<BsonDocument>(new BsonDocument { { "reIndex", this.Name } }));
         }
 
         /// <summary>
@@ -235,7 +217,7 @@
         [Obsolete("This method will be removed in the next version of the driver")]
         public virtual long GetTotalDataSize()
         {
-            return this.collection.GetTotalDataSize();
+            return this.GetStats().DataSize;
         }
 
         /// <summary>
@@ -245,7 +227,7 @@
         [Obsolete("This method will be removed in the next version of the driver")]
         public virtual long GetTotalStorageSize()
         {
-            return this.collection.GetTotalStorageSize();
+            return this.GetStats().StorageSize;
         }
 
         /// <summary>
@@ -255,7 +237,9 @@
         /// <remarks>You will need to reference MongoDb.Driver.</remarks>
         public virtual ValidateCollectionResult Validate()
         {
-            return this.collection.Validate();
+            return new ValidateCollectionResult(
+                this.collection.Database.RunCommand(new BsonDocumentCommand<BsonDocument>(new BsonDocument { { "validate", this.Name } }))
+            );
         }
 
         /// <summary>
@@ -265,16 +249,18 @@
         /// <remarks>You will need to reference MongoDb.Driver.</remarks>
         public virtual CollectionStatsResult GetStats()
         {
-            return this.collection.GetStats();
+            return new CollectionStatsResult(
+                this.collection.Database.RunCommand(new BsonDocumentCommand<BsonDocument>(new BsonDocument { { "collstats", this.Name } }))
+            );
         }
 
         /// <summary>
         /// Gets the indexes for this repository.
         /// </summary>
         /// <returns>Returns the indexes for this repository.</returns>
-        public virtual GetIndexesResult GetIndexes()
+        public virtual List<BsonDocument> GetIndexes()
         {
-            return this.collection.GetIndexes();
+            return this.collection.Indexes.List().ToList();
         }
     }
 

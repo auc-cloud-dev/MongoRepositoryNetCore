@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using MongoDB.Driver;
     using System;
+    using MongoDB.Bson;
 
     /// <summary>
     /// IRepositoryManager definition.
@@ -97,17 +98,6 @@
         void EnsureIndexes(IEnumerable<string> keynames, bool descending, bool unique, bool sparse);
 
         /// <summary>
-        /// Ensures that the desired indexes exist and creates them if they don't exist.
-        /// </summary>
-        /// <param name="keys">The indexed fields.</param>
-        /// <param name="options">The index options.</param>
-        /// <remarks>
-        /// This is a convenience method for EnsureIndexes(IMongoIndexKeys keys, IMongoIndexOptions options).
-        /// Index will be ascending order, non-unique, non-sparse.
-        /// </remarks>
-        void EnsureIndexes(IMongoIndexKeys keys, IMongoIndexOptions options);
-
-        /// <summary>
         /// Tests whether indexes exist.
         /// </summary>
         /// <param name="keyname">The indexed fields.</param>
@@ -156,7 +146,7 @@
         /// Gets the indexes for this repository.
         /// </summary>
         /// <returns>Returns the indexes for this repository.</returns>
-        GetIndexesResult GetIndexes();
+        List<BsonDocument> GetIndexes();
     }
 
     /// <summary>
