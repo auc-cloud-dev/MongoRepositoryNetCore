@@ -86,9 +86,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MongoRepository.Net45\MongoRepository.Net45.csproj">
+    <ProjectReference Include="..\MongoRepository.Net\MongoRepository.Net.csproj">
       <Project>{ce75b2fe-c027-42f6-8d00-e44cc38be7c7}</Project>
-      <Name>MongoRepository.Net45</Name>
+      <Name>MongoRepository.Net</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
