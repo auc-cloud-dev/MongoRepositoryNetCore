@@ -1,13 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Driver;
 using MongoRepository;
-using MongoRepositoryTests.Entities;
+using MongoRepository.Net.Tests.Entities;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 
-namespace MongoRepositoryTests
+namespace MongoRepository.Net.Tests
 {
     //TODO: We REALLY need some decent tests and cleanup this mess.
 

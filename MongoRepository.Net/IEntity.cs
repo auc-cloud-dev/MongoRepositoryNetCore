@@ -1,4 +1,4 @@
-namespace MongoRepository
+namespace MongoRepository.Net
 {
     using MongoDB.Bson.Serialization.Attributes;
 

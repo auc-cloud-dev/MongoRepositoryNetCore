@@ -1,7 +1,7 @@
 ﻿using MongoRepository;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace MongoRepositoryTests.Entities
+namespace MongoRepository.Net.Tests.Entities
 {
     [CollectionName("AnimalsTest")]
     [BsonKnownTypes(typeof(Bird), typeof(Dog))]

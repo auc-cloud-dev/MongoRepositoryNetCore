@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using MongoRepository;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace MongoRepositoryTests.Entities
+namespace MongoRepository.Net.Tests.Entities
 {
     /// <summary>
     /// Business Entity for Customer

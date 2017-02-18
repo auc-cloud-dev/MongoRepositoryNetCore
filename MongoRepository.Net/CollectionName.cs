@@ -1,4 +1,4 @@
-﻿namespace MongoRepository
+﻿namespace MongoRepository.Net
 {
     using System;
     using System.Collections.Generic;

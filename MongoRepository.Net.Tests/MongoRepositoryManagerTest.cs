@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace MongoRepositoryTests
+namespace MongoRepository.Net.Tests
 {
     
     
