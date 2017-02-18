@@ -2,7 +2,7 @@
 using System;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace MongoRepository.Net.Tests.Entities
+namespace MongoRepository.NetTests.Entities
 {
     public class CustomIDEntity : IEntity
     {

@@ -9,8 +9,8 @@
     <ProjectGuid>{7C8276C3-819A-4EA1-BFDA-64C3760B0037}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MongoRepository.Net.Tests</RootNamespace>
-    <AssemblyName>MongoRepository.Net.Tests</AssemblyName>
+    <RootNamespace>MongoRepository.NetTests</RootNamespace>
+    <AssemblyName>MongoRepository.NetTests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
