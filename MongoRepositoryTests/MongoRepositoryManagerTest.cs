@@ -1,8 +1,8 @@
-﻿using MongoRepository.Net;
+﻿using MongoRepository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace MongoRepository.NetTests
+namespace MongoRepositoryTests
 {
     
     

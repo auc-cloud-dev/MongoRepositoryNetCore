@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using MongoRepository.Net;
+using MongoRepository;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace MongoRepository.NetTests.Entities
+namespace MongoRepositoryTests.Entities
 {
     /// <summary>
     /// Business Entity for Customer

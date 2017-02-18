@@ -1,8 +1,8 @@
-﻿using MongoRepository.Net;
+﻿using MongoRepository;
 using System;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace MongoRepository.NetTests.Entities
+namespace MongoRepositoryTests.Entities
 {
     public class CustomIDEntity : IEntity
     {
