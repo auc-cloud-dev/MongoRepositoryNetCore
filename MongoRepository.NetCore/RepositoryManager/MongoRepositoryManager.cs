@@ -1,4 +1,4 @@
-﻿namespace MongoRepository
+﻿namespace MongoRepository.NetCore
 {
     using MongoDB.Bson;
     using MongoDB.Driver;

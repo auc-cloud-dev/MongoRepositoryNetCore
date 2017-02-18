@@ -1,8 +1,8 @@
-﻿using MongoRepository;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using MongoRepository.NetCore;
+using Xunit;
 using System;
 
-namespace MongoRepositoryTests
+namespace MongoRepository.NetCoreTests
 {
     
     
@@ -10,28 +10,8 @@ namespace MongoRepositoryTests
     ///This is a test class for MongoRepositoryManagerTest and is intended
     ///to contain all MongoRepositoryManagerTest Unit Tests
     ///</summary>
-    [TestClass()]
     public class MongoRepositoryManagerTest
     {
-
-
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
 
         #region Additional test attributes
         // 

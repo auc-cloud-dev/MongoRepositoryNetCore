@@ -1,4 +1,4 @@
-﻿namespace MongoRepository
+﻿namespace MongoRepository.NetCore
 {
     using System;
     using System.Collections.Generic;

@@ -1,4 +1,6 @@
-﻿namespace MongoRepository
+﻿using System.Reflection;
+
+namespace MongoRepository.NetCore
 {
     using MongoDB.Bson;
     using MongoDB.Driver;
@@ -225,7 +227,7 @@
 
         private static FilterDefinition<T> GetIDFilter(TKey id)
         {
-            if (typeof(T).IsSubclassOf(typeof(Entity)))
+            if (typeof(T).GetTypeInfo().IsSubclassOf(typeof(Entity)))
                 return GetIDFilter(new ObjectId(id as string));
             return Builders<T>.Filter.Eq("_id", id);
         }

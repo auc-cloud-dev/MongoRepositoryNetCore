@@ -1,46 +1,46 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MongoDB.Driver;
-using MongoRepository;
-using MongoRepositoryTests.Entities;
+﻿using MongoDB.Driver;
+using MongoRepository.NetCore;
+using MongoRepository.NetCoreTests.Entities;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
+using System.IO;
+using Microsoft.Extensions.Configuration;
 using System.Linq;
+using Xunit;
 
-namespace MongoRepositoryTests
+namespace MongoRepository.NetCoreTests
 {
-    //TODO: We REALLY need some decent tests and cleanup this mess.
-
-    [TestClass]
-    public class RepoTests
+    public class RepoTests : IDisposable
     {
-        [TestInitialize]
-        public void Setup()
+        public RepoTests()
         {
             this.DropDB();
         }
 
-        [TestCleanup]
-        public void Cleanup()
+        public void Dispose()
         {
             this.DropDB();
         }
 
         private void DropDB()
         {
-            var url = new MongoUrl(ConfigurationManager.ConnectionStrings["MongoServerSettings"].ConnectionString);
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            var configuration = builder.Build();
+            var url = new MongoUrl(configuration["MongoServerSettings:connectionString"]);
+            // var url = new MongoUrl(ConfigurationManager.ConnectionStrings["MongoServerSettings"].ConnectionString);
             var client = new MongoClient(url);
             client.DropDatabase(url.DatabaseName);
         }
 
-
-        [TestMethod]
+        [Fact]
         public void AddAndUpdateTest()
         {
             IRepository<Customer> _customerRepo = new MongoRepository<Customer>();
             IRepositoryManager<Customer> _customerMan = new MongoRepositoryManager<Customer>();
 
-            Assert.IsFalse(_customerMan.Exists);
+            Assert.False(_customerMan.Exists);
 
             var customer = new Customer();
             customer.FirstName = "Bob";
@@ -58,16 +58,16 @@ namespace MongoRepositoryTests
 
             _customerRepo.Add(customer);
 
-            Assert.IsTrue(_customerMan.Exists);
+            Assert.True(_customerMan.Exists);
 
-            Assert.IsNotNull(customer.Id);
+            Assert.NotNull(customer.Id);
 
             // fetch it back 
             var alreadyAddedCustomer = _customerRepo.Where(c => c.FirstName == "Bob").Single();
 
-            Assert.IsNotNull(alreadyAddedCustomer);
-            Assert.AreEqual(customer.FirstName, alreadyAddedCustomer.FirstName);
-            Assert.AreEqual(customer.HomeAddress.Address1, alreadyAddedCustomer.HomeAddress.Address1);
+            Assert.NotNull(alreadyAddedCustomer);
+            Assert.Equal(customer.FirstName, alreadyAddedCustomer.FirstName);
+            Assert.Equal(customer.HomeAddress.Address1, alreadyAddedCustomer.HomeAddress.Address1);
 
             alreadyAddedCustomer.Phone = "10110111";
             alreadyAddedCustomer.Email = "dil.bob@fastmail.org";
@@ -77,14 +77,14 @@ namespace MongoRepositoryTests
             // fetch by id now 
             var updatedCustomer = _customerRepo.GetById(customer.Id);
 
-            Assert.IsNotNull(updatedCustomer);
-            Assert.AreEqual(alreadyAddedCustomer.Phone, updatedCustomer.Phone);
-            Assert.AreEqual(alreadyAddedCustomer.Email, updatedCustomer.Email);
+            Assert.NotNull(updatedCustomer);
+            Assert.Equal(alreadyAddedCustomer.Phone, updatedCustomer.Phone);
+            Assert.Equal(alreadyAddedCustomer.Email, updatedCustomer.Email);
 
-            Assert.IsTrue(_customerRepo.Exists(c => c.HomeAddress.Country == "Alaska"));
+            Assert.True(_customerRepo.Exists(c => c.HomeAddress.Country == "Alaska"));
         }
 
-        [TestMethod]
+        [Fact]
         public void ComplexEntityTest()
         {
             IRepository<Customer> _customerRepo = new MongoRepository<Customer>();
@@ -127,19 +127,19 @@ namespace MongoRepositoryTests
 
             _customerRepo.Add(customer);
 
-            Assert.IsNotNull(customer.Id);
-            Assert.IsNotNull(customer.Orders[0].Items[0].Product.Id);
+            Assert.NotNull(customer.Id);
+            Assert.NotNull(customer.Orders[0].Items[0].Product.Id);
 
             // get the orders  
             var theOrders = _customerRepo.Where(c => c.Id == customer.Id).Select(c => c.Orders).ToList();
             var theOrderItems = theOrders[0].Select(o => o.Items);
 
-            Assert.IsNotNull(theOrders);
-            Assert.IsNotNull(theOrderItems);
+            Assert.NotNull(theOrders);
+            Assert.NotNull(theOrderItems);
         }
 
 
-        [TestMethod]
+        [Fact]
         public void BatchTest()
         {
             IRepository<Customer> _customerRepo = new MongoRepository<Customer>();
@@ -158,9 +158,9 @@ namespace MongoRepositoryTests
             _customerRepo.Add(custlist);
 
             var count = _customerRepo.Count();
-            Assert.AreEqual(7, count);
+            Assert.Equal(7, count);
             foreach (Customer c in custlist)
-                Assert.AreNotEqual(new string('0', 24), c.Id);
+                Assert.NotEqual(new string('0', 24), c.Id);
 
             //Update batch
             foreach (Customer c in custlist)
@@ -168,13 +168,13 @@ namespace MongoRepositoryTests
             _customerRepo.Update(custlist);
 
             foreach (Customer c in _customerRepo)
-                Assert.AreEqual(c.FirstName, c.LastName);
+                Assert.Equal(c.FirstName, c.LastName);
 
             //Delete by criteria
             _customerRepo.Delete(f => f.FirstName.StartsWith("Client"));
 
             count = _customerRepo.Count();
-            Assert.AreEqual(4, count);
+            Assert.Equal(4, count);
 
             //Delete specific object
             _customerRepo.Delete(custlist[0]);
@@ -184,93 +184,93 @@ namespace MongoRepositoryTests
                                     where cust.LastName.EndsWith("C") || cust.LastName.EndsWith("G")
                                     select cust;
 
-            Assert.AreEqual(2, selectedcustomers.ToList().Count);
+            Assert.Equal(2, selectedcustomers.ToList().Count);
 
             count = _customerRepo.Count();
-            Assert.AreEqual(3, count);
+            Assert.Equal(3, count);
 
             //Drop entire repo
             new MongoRepositoryManager<Customer>().Drop();
 
             count = _customerRepo.Count();
-            Assert.AreEqual(0, count);
+            Assert.Equal(0, count);
         }
 
-        [TestMethod]
+        [Fact]
         public void CollectionNamesTest()
         {
             var a = new MongoRepository<Animal>();
             var am = new MongoRepositoryManager<Animal>();
             var va = new Dog();
-            Assert.IsFalse(am.Exists);
+            Assert.False(am.Exists);
             a.Update(va);
-            Assert.IsTrue(am.Exists);
-            Assert.IsInstanceOfType(a.GetById(va.Id), typeof(Dog));
-            Assert.AreEqual(am.Name, "AnimalsTest");
-            Assert.AreEqual(a.CollectionName, "AnimalsTest");
+            Assert.True(am.Exists);
+            Assert.IsType(typeof(Dog), a.GetById(va.Id));
+            Assert.Equal(am.Name, "AnimalsTest");
+            Assert.Equal(a.CollectionName, "AnimalsTest");
 
             var cl = new MongoRepository<CatLike>();
             var clm = new MongoRepositoryManager<CatLike>();
             var vcl = new Lion();
-            Assert.IsFalse(clm.Exists);
+            Assert.False(clm.Exists);
             cl.Update(vcl);
-            Assert.IsTrue(clm.Exists);
-            Assert.IsInstanceOfType(cl.GetById(vcl.Id), typeof(Lion));
-            Assert.AreEqual(clm.Name, "Catlikes");
-            Assert.AreEqual(cl.CollectionName, "Catlikes");
+            Assert.True(clm.Exists);
+            Assert.IsType(typeof(Lion), cl.GetById(vcl.Id));
+            Assert.Equal(clm.Name, "Catlikes");
+            Assert.Equal(cl.CollectionName, "Catlikes");
 
             var b = new MongoRepository<Bird>();
             var bm = new MongoRepositoryManager<Bird>();
             var vb = new Bird();
-            Assert.IsFalse(bm.Exists);
+            Assert.False(bm.Exists);
             b.Update(vb);
-            Assert.IsTrue(bm.Exists);
-            Assert.IsInstanceOfType(b.GetById(vb.Id), typeof(Bird));
-            Assert.AreEqual(bm.Name, "Birds");
-            Assert.AreEqual(b.CollectionName, "Birds");
+            Assert.True(bm.Exists);
+            Assert.IsType(typeof(Bird), b.GetById(vb.Id));
+            Assert.Equal(bm.Name, "Birds");
+            Assert.Equal(b.CollectionName, "Birds");
 
             var l = new MongoRepository<Lion>();
             var lm = new MongoRepositoryManager<Lion>();
             var vl = new Lion();
-            //Assert.IsFalse(lm.Exists);   //Should already exist (created by cl)
+            //Assert.False(lm.Exists);   //Should already exist (created by cl)
             l.Update(vl);
-            Assert.IsTrue(lm.Exists);
-            Assert.IsInstanceOfType(l.GetById(vl.Id), typeof(Lion));
-            Assert.AreEqual(lm.Name, "Catlikes");
-            Assert.AreEqual(l.CollectionName, "Catlikes");
+            Assert.True(lm.Exists);
+            Assert.IsType(typeof(Lion), l.GetById(vl.Id));
+            Assert.Equal(lm.Name, "Catlikes");
+            Assert.Equal(l.CollectionName, "Catlikes");
 
             var d = new MongoRepository<Dog>();
             var dm = new MongoRepositoryManager<Dog>();
             var vd = new Dog();
-            //Assert.IsFalse(dm.Exists);
+            //Assert.False(dm.Exists);
             d.Update(vd);
-            Assert.IsTrue(dm.Exists);
-            Assert.IsInstanceOfType(d.GetById(vd.Id), typeof(Dog));
-            Assert.AreEqual(dm.Name, "AnimalsTest");
-            Assert.AreEqual(d.CollectionName, "AnimalsTest");
+            Assert.True(dm.Exists);
+            Assert.IsType(typeof(Dog), d.GetById(vd.Id));
+            Assert.Equal(dm.Name, "AnimalsTest");
+            Assert.Equal(d.CollectionName, "AnimalsTest");
 
             var m = new MongoRepository<Bird>();
             var mm = new MongoRepositoryManager<Bird>();
             var vm = new Macaw();
-            //Assert.IsFalse(mm.Exists);
+            //Assert.False(mm.Exists);
             m.Update(vm);
-            Assert.IsTrue(mm.Exists);
-            Assert.IsInstanceOfType(m.GetById(vm.Id), typeof(Macaw));
-            Assert.AreEqual(mm.Name, "Birds");
-            Assert.AreEqual(m.CollectionName, "Birds");
+            Assert.True(mm.Exists);
+            Assert.IsType(typeof(Macaw), m.GetById(vm.Id));
+            Assert.Equal(mm.Name, "Birds");
+            Assert.Equal(m.CollectionName, "Birds");
 
             var w = new MongoRepository<Whale>();
             var wm = new MongoRepositoryManager<Whale>();
             var vw = new Whale();
-            Assert.IsFalse(wm.Exists);
+            Assert.False(wm.Exists);
             w.Update(vw);
-            Assert.IsTrue(wm.Exists);
-            Assert.IsInstanceOfType(w.GetById(vw.Id), typeof(Whale));
-            Assert.AreEqual(wm.Name, "Whale");
-            Assert.AreEqual(w.CollectionName, "Whale");
+            Assert.True(wm.Exists);
+            Assert.IsType(typeof(Whale), w.GetById(vw.Id));
+            Assert.Equal(wm.Name, "Whale");
+            Assert.Equal(w.CollectionName, "Whale");
         }
 
-        [TestMethod]
+        [Fact]
         public void CustomIDTest()
         {
             var x = new MongoRepository<CustomIDEntity>();
@@ -278,29 +278,29 @@ namespace MongoRepositoryTests
 
             x.Add(new CustomIDEntity() { Id = "aaa" });
 
-            Assert.IsTrue(xm.Exists);
-            Assert.IsInstanceOfType(x.GetById("aaa"), typeof(CustomIDEntity));
+            Assert.True(xm.Exists);
+            Assert.IsType(typeof(CustomIDEntity), x.GetById("aaa"));
 
-            Assert.AreEqual("aaa", x.GetById("aaa").Id);
+            Assert.Equal("aaa", x.GetById("aaa").Id);
 
             x.Delete("aaa");
-            Assert.AreEqual(0, x.Count());
+            Assert.Equal(0, x.Count());
 
             var y = new MongoRepository<CustomIDEntityCustomCollection>();
             var ym = new MongoRepositoryManager<CustomIDEntityCustomCollection>();
 
             y.Add(new CustomIDEntityCustomCollection() { Id = "xyz" });
 
-            Assert.IsTrue(ym.Exists);
-            Assert.AreEqual(ym.Name, "MyTestCollection");
-            Assert.AreEqual(y.CollectionName, "MyTestCollection");
-            Assert.IsInstanceOfType(y.GetById("xyz"), typeof(CustomIDEntityCustomCollection));
+            Assert.True(ym.Exists);
+            Assert.Equal(ym.Name, "MyTestCollection");
+            Assert.Equal(y.CollectionName, "MyTestCollection");
+            Assert.IsType(typeof(CustomIDEntityCustomCollection), y.GetById("xyz"));
 
             y.Delete("xyz");
-            Assert.AreEqual(0, y.Count());
+            Assert.Equal(0, y.Count());
         }
 
-        [TestMethod]
+        [Fact]
         public void CustomIDTypeTest()
         {
             var xint = new MongoRepository<IntCustomer, int>();
@@ -308,23 +308,23 @@ namespace MongoRepositoryTests
             xint.Add(new IntCustomer() { Id = 2, Name = "Test B" });
 
             var yint = xint.GetById(2);
-            Assert.AreEqual(yint.Name, "Test B");
+            Assert.Equal(yint.Name, "Test B");
 
             xint.Delete(2);
-            Assert.AreEqual(1, xint.Count());
+            Assert.Equal(1, xint.Count());
         }
 
-        [TestMethod]
+        [Fact]
         public void OverrideCollectionName()
         {
             IRepository<Customer> _customerRepo = new MongoRepository<Customer>("mongodb://localhost/MongoRepositoryTests", "TestCustomers123");
             _customerRepo.Add(new Customer() { FirstName = "Test" });
-            Assert.IsTrue(_customerRepo.Single().FirstName.Equals("Test"));
-            Assert.AreEqual("TestCustomers123", _customerRepo.Collection.CollectionNamespace.CollectionName);
-            Assert.AreEqual("TestCustomers123", ((MongoRepository<Customer>)_customerRepo).CollectionName);
+            Assert.True(_customerRepo.Single().FirstName.Equals("Test"));
+            Assert.Equal("TestCustomers123", _customerRepo.Collection.CollectionNamespace.CollectionName);
+            Assert.Equal("TestCustomers123", ((MongoRepository<Customer>)_customerRepo).CollectionName);
 
             IRepositoryManager<Customer> _curstomerRepoManager = new MongoRepositoryManager<Customer>("mongodb://localhost/MongoRepositoryTests", "TestCustomers123");
-            Assert.AreEqual("TestCustomers123", _curstomerRepoManager.Name);
+            Assert.Equal("TestCustomers123", _curstomerRepoManager.Name);
         }
 
         #region Reproduce issue: https://mongorepository.codeplex.com/discussions/433878
@@ -339,7 +339,7 @@ namespace MongoRepositoryTests
         public class SpecialA : BaseA
         { }
 
-        [TestMethod]
+        [Fact]
         public void Discussion433878()
         {
             var specialRepository = new MongoRepository<SpecialA>();
@@ -362,7 +362,7 @@ namespace MongoRepositoryTests
             public string Prop3 { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void Discussion572382()
         {
             var repo = new MongoRepository<ClassA>() { 
@@ -370,11 +370,11 @@ namespace MongoRepositoryTests
                 new ClassC() { Prop1 = "A", Prop3 = "C" }
             };
 
-            Assert.AreEqual(2, repo.Count());
+            Assert.Equal(2, repo.Count());
 
-            Assert.AreEqual(2, repo.OfType<ClassA>().Count());
-            Assert.AreEqual(1, repo.OfType<ClassB>().Count());
-            Assert.AreEqual(1, repo.OfType<ClassC>().Count());
+            Assert.Equal(2, repo.OfType<ClassA>().Count());
+            Assert.Equal(1, repo.OfType<ClassB>().Count());
+            Assert.Equal(1, repo.OfType<ClassC>().Count());
         }
         #endregion
 

@@ -7,8 +7,10 @@
     "System.Runtime.Serialization.Primitives": "4.1.1",
     "xunit": "2.1.0",
     "dotnet-test-xunit": "1.0.0-rc2-192208-24",
-    "MongoRepository.NetCore": "1.0.0-*",
-    "MongoDB.Driver": "2.4.2"
+    "MongoDB.Driver": "2.4.2",
+    "Microsoft.Extensions.Configuration": "1.1.0",
+    "Microsoft.Extensions.Configuration.Json": "1.1.0",
+    "MongoRepository.NetCore": "1.0.0-*"
   },
   "testRunner": "xunit",
   "frameworks": {
@@ -21,7 +23,8 @@
       },
       "imports": [
         "dotnet5.4",
-        "portable-net451+win8"
+        "portable-net451+win8",
+		"dnxcore50"
       ]
     }
   }

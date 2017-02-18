@@ -1,7 +1,7 @@
 ﻿using System;
-using MongoRepository;
+using MongoRepository.NetCore;
 
-namespace MongoRepositoryTests.Entities
+namespace MongoRepository.NetCoreTests.Entities
 {
     /// <summary>
     /// Business Entity for Product

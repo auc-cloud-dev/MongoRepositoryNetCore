@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace MongoRepository
+namespace MongoRepository.NetCore
 {
     /// <summary>
     /// Represents the results of a validate collection command.
