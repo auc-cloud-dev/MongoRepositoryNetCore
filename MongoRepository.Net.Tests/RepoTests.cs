@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Driver;
-using MongoRepository;
+using MongoRepository.Net;
 using MongoRepository.Net.Tests.Entities;
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,4 @@
-﻿using MongoRepository;
+﻿using MongoRepository.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 

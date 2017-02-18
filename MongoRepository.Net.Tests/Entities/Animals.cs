@@ -1,4 +1,4 @@
-﻿using MongoRepository;
+﻿using MongoRepository.Net;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace MongoRepository.Net.Tests.Entities

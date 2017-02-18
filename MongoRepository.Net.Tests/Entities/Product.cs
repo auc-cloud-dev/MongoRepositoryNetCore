@@ -1,5 +1,5 @@
 ﻿using System;
-using MongoRepository;
+using MongoRepository.Net;
 
 namespace MongoRepository.Net.Tests.Entities
 {

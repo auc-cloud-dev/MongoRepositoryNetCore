@@ -1,4 +1,4 @@
-﻿using MongoRepository;
+﻿using MongoRepository.Net;
 using System;
 using MongoDB.Bson.Serialization.Attributes;
 
