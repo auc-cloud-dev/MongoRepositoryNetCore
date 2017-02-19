@@ -237,7 +237,7 @@
             return Builders<T>.Filter.Eq("_id", id);
         }
 
-#region IQueryable<T>
+        #region IQueryable<T>
         /// <summary>
         /// Returns an enumerator that iterates through a collection.
         /// </summary>
@@ -279,7 +279,7 @@
         {
             get { return this.collection.AsQueryable<T>().Provider; }
         }
-#endregion
+        #endregion
     }
 
     /// <summary>
