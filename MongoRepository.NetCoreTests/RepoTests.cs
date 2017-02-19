@@ -1,5 +1,5 @@
 ﻿using MongoDB.Driver;
-using MongoRepository.NetCore;
+using MongoRepository;
 using MongoRepository.NetCoreTests.Entities;
 using System;
 using System.Collections.Generic;

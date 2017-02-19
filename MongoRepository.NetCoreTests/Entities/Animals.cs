@@ -1,4 +1,4 @@
-﻿using MongoRepository.NetCore;
+﻿using MongoRepository;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace MongoRepository.NetCoreTests.Entities

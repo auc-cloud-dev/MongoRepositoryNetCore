@@ -14,7 +14,7 @@
     "MongoDB.Driver": "2.4.2",
     "Microsoft.Extensions.Configuration": "1.1.0",
     "Microsoft.Extensions.Configuration.Json": "1.1.0",
-    "MongoRepository.NetCore": "1.0.0-*"
+    "MongoRepository": "1.0.0-*"
   },
   "testRunner": "xunit",
   "frameworks": {

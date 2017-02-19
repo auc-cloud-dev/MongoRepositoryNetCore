@@ -2,7 +2,13 @@
 {
     using MongoDB.Driver;
     using System;
+#if NETCOREAPP1_0
+    using System.IO;
+    using System.Reflection;
+    using Microsoft.Extensions.Configuration;
+#else
     using System.Configuration;
+#endif
 
     /// <summary>
     /// Internal miscellaneous utility functions.
@@ -20,7 +26,15 @@
         /// <returns>Returns the default connectionstring from the App.config or Web.config file.</returns>
         public static string GetDefaultConnectionString()
         {
+#if NETCOREAPP1_0
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            var configuration = builder.Build();
+            return configuration["MongoServerSettings:connectionString"];
+#else
             return ConfigurationManager.ConnectionStrings[DefaultConnectionstringName].ConnectionString;
+#endif
         }
 
         /// <summary>
@@ -95,7 +109,11 @@
         private static string GetCollectionName<T>() where T : IEntity<U>
         {
             string collectionName;
+#if NETCOREAPP1_0
+            if (typeof(T).GetTypeInfo().BaseType.Equals(typeof(object)))
+#else
             if (typeof(T).BaseType.Equals(typeof(object)))
+#endif
             {
                 collectionName = GetCollectioNameFromInterface<T>();
             }
@@ -121,7 +139,11 @@
             string collectionname;
 
             // Check to see if the object (inherited from Entity) has a CollectionName attribute
+#if NETCOREAPP1_0
+            var att = typeof(T).GetTypeInfo().GetCustomAttribute<CollectionName>();
+#else
             var att = Attribute.GetCustomAttribute(typeof(T), typeof(CollectionName));
+#endif
             if (att != null)
             {
                 // It does! Return the value specified by the CollectionName attribute
@@ -145,7 +167,11 @@
             string collectionname;
 
             // Check to see if the object (inherited from Entity) has a CollectionName attribute
+#if NETCOREAPP1_0
+            var att = entitytype.GetTypeInfo().GetCustomAttribute<CollectionName>();
+#else
             var att = Attribute.GetCustomAttribute(entitytype, typeof(CollectionName));
+#endif
             if (att != null)
             {
                 // It does! Return the value specified by the CollectionName attribute
@@ -156,10 +182,17 @@
                 if (typeof(Entity).IsAssignableFrom(entitytype))
                 {
                     // No attribute found, get the basetype
+#if NETCOREAPP1_0
+                    while (!entitytype.GetTypeInfo().BaseType.Equals(typeof(Entity)))
+                    {
+                        entitytype = entitytype.GetTypeInfo().BaseType;
+                    }
+#else
                     while (!entitytype.BaseType.Equals(typeof(Entity)))
                     {
                         entitytype = entitytype.BaseType;
                     }
+#endif
                 }
                 collectionname = entitytype.Name;
             }

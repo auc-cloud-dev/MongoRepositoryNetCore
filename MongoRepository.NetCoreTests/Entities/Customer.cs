@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using MongoRepository.NetCore;
+using MongoRepository;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace MongoRepository.NetCoreTests.Entities

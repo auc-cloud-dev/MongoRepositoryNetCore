@@ -6,6 +6,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
+#if NETCOREAPP1_0
+    using System.Reflection;
+#endif
 
     /// <summary>
     /// Deals with entities in MongoDb.
@@ -225,12 +228,16 @@
 
         private static FilterDefinition<T> GetIDFilter(TKey id)
         {
+#if NETCOREAPP1_0
+            if (typeof(T).GetTypeInfo().IsSubclassOf(typeof(Entity)))
+#else
             if (typeof(T).IsSubclassOf(typeof(Entity)))
+#endif
                 return GetIDFilter(new ObjectId(id as string));
             return Builders<T>.Filter.Eq("_id", id);
         }
 
-        #region IQueryable<T>
+#region IQueryable<T>
         /// <summary>
         /// Returns an enumerator that iterates through a collection.
         /// </summary>
@@ -272,7 +279,7 @@
         {
             get { return this.collection.AsQueryable<T>().Provider; }
         }
-        #endregion
+#endregion
     }
 
     /// <summary>

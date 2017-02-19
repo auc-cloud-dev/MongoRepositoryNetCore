@@ -2972,7 +2972,7 @@
           "lib/netstandard1.1/xunit.runner.utility.dotnet.dll": {}
         }
       },
-      "MongoRepository.NetCore/1.0.0": {
+      "MongoRepository/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v1.0",
         "dependencies": {
@@ -2981,12 +2981,6 @@
           "Microsoft.NETCore.App": "1.1.0",
           "MongoDB.Driver": "2.4.2",
           "NETStandard.Library": "1.6.0"
-        },
-        "compile": {
-          "netcoreapp1.0/MongoRepository.NetCore.dll": {}
-        },
-        "runtime": {
-          "netcoreapp1.0/MongoRepository.NetCore.dll": {}
         }
       }
     }
@@ -8502,10 +8496,9 @@
         "xunit.runner.utility.nuspec"
       ]
     },
-    "MongoRepository.NetCore/1.0.0": {
+    "MongoRepository/1.0.0": {
       "type": "project",
-      "path": "../MongoRepository.NetCore/project.json",
-      "msbuildProject": "../MongoRepository.NetCore/MongoRepository.NetCore.xproj"
+      "path": "../MongoRepository/project.json"
     }
   },
   "projectFileDependencyGroups": {
@@ -8514,7 +8507,7 @@
       "Microsoft.Extensions.Configuration.Json >= 1.1.0",
       "Microsoft.NETCore.App >= 1.0.1",
       "MongoDB.Driver >= 2.4.2",
-      "MongoRepository.NetCore >= 1.0.0-*",
+      "MongoRepository >= 1.0.0-*",
       "System.Runtime.Serialization.Primitives >= 4.1.1",
       "dotnet-test-xunit >= 2.2.0-*",
       "xunit >= 2.1.0-*"

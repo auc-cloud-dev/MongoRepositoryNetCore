@@ -1,4 +1,4 @@
-﻿using MongoRepository.NetCore;
+﻿using MongoRepository;
 using Xunit;
 using System;
 
