@@ -390,7 +390,7 @@
           "lib/netstandard1.6/Microsoft.Extensions.Testing.Abstractions.dll": {}
         }
       },
-      "Microsoft.NETCore.App/1.0.1": {
+      "Microsoft.NETCore.App/1.0.0": {
         "type": "package",
         "dependencies": {
           "Libuv": "1.9.0",
@@ -398,7 +398,7 @@
           "Microsoft.CodeAnalysis.CSharp": "1.3.0",
           "Microsoft.CodeAnalysis.VisualBasic": "1.3.0",
           "Microsoft.NETCore.DotNetHostPolicy": "1.0.1",
-          "Microsoft.NETCore.Runtime.CoreCLR": "1.0.4",
+          "Microsoft.NETCore.Runtime.CoreCLR": "1.0.2",
           "Microsoft.VisualBasic": "10.0.1",
           "NETStandard.Library": "1.6.0",
           "System.Buffers": "4.0.0",
@@ -457,7 +457,7 @@
           "Microsoft.NETCore.DotNetHost": "1.0.1"
         }
       },
-      "Microsoft.NETCore.Jit/1.0.4": {
+      "Microsoft.NETCore.Jit/1.0.2": {
         "type": "package"
       },
       "Microsoft.NETCore.Platforms/1.1.0": {
@@ -469,10 +469,10 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "Microsoft.NETCore.Runtime.CoreCLR/1.0.4": {
+      "Microsoft.NETCore.Runtime.CoreCLR/1.0.2": {
         "type": "package",
         "dependencies": {
-          "Microsoft.NETCore.Jit": "1.0.4",
+          "Microsoft.NETCore.Jit": "1.0.2",
           "Microsoft.NETCore.Windows.ApiSets": "1.0.1"
         }
       },
@@ -2978,7 +2978,7 @@
         "dependencies": {
           "Microsoft.Extensions.Configuration": "1.1.0",
           "Microsoft.Extensions.Configuration.Json": "1.1.0",
-          "Microsoft.NETCore.App": "1.1.0",
+          "Microsoft.NETCore.App": "1.0.0",
           "MongoDB.Driver": "2.4.2",
           "NETStandard.Library": "1.6.0"
         }
@@ -3311,12 +3311,12 @@
         "lib/netstandard1.6/Microsoft.Extensions.Testing.Abstractions.dll"
       ]
     },
-    "Microsoft.NETCore.App/1.0.1": {
-      "sha512": "bGrTPzX/HhT0F2MGYo8g9JcNUR5BqyJSgg1gs6LtFGzJtJLiw4+J8WqjLR4l0APG97XhDOrYO+n6L1utAoFghA==",
+    "Microsoft.NETCore.App/1.0.0": {
+      "sha512": "Bv40dLDrT+Igcg1e6otW3D8voeJCfcAxOlsxSVlDz+J+cdWls5kblZvPHHvx7gX3/oJoQVIkEeO3sMyv5PSVJA==",
       "type": "package",
-      "path": "Microsoft.NETCore.App/1.0.1",
+      "path": "Microsoft.NETCore.App/1.0.0",
       "files": [
-        "Microsoft.NETCore.App.1.0.1.nupkg.sha512",
+        "Microsoft.NETCore.App.1.0.0.nupkg.sha512",
         "Microsoft.NETCore.App.nuspec",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -3359,12 +3359,12 @@
         "runtime.json"
       ]
     },
-    "Microsoft.NETCore.Jit/1.0.4": {
-      "sha512": "693HgaQR+BP9t0pSpL8VHhG5C7ry1SQ2XMxhjJtKKvn4fNoaUsswgaHvVDEB2A0kUZxLFCpMmALZW1KAVKhWnA==",
+    "Microsoft.NETCore.Jit/1.0.2": {
+      "sha512": "Ok2vWofa6X8WD9vc4pfLHwvJz1/B6t3gOAoZcjrjrQf7lQOlNIuZIZtLn3wnWX28DuQGpPJkRlBxFj7Z5txNqw==",
       "type": "package",
-      "path": "Microsoft.NETCore.Jit/1.0.4",
+      "path": "Microsoft.NETCore.Jit/1.0.2",
       "files": [
-        "Microsoft.NETCore.Jit.1.0.4.nupkg.sha512",
+        "Microsoft.NETCore.Jit.1.0.2.nupkg.sha512",
         "Microsoft.NETCore.Jit.nuspec",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -3384,12 +3384,12 @@
         "runtime.json"
       ]
     },
-    "Microsoft.NETCore.Runtime.CoreCLR/1.0.4": {
-      "sha512": "Syou+QbWwCgXDj5gxuxRJnTZK1OJ1TKFpd1CaemEjKBjTzPWap1y+Z4PILmW6es3DsnI0tcDstOJXWAcRvcIUg==",
+    "Microsoft.NETCore.Runtime.CoreCLR/1.0.2": {
+      "sha512": "A0x1xtTjYJWZr2DRzgfCOXgB0JkQg8twnmtTJ79wFje+IihlLbXtx6Z2AxyVokBM5ruwTedR6YdCmHk39QJdtQ==",
       "type": "package",
-      "path": "Microsoft.NETCore.Runtime.CoreCLR/1.0.4",
+      "path": "Microsoft.NETCore.Runtime.CoreCLR/1.0.2",
       "files": [
-        "Microsoft.NETCore.Runtime.CoreCLR.1.0.4.nupkg.sha512",
+        "Microsoft.NETCore.Runtime.CoreCLR.1.0.2.nupkg.sha512",
         "Microsoft.NETCore.Runtime.CoreCLR.nuspec",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -8505,7 +8505,7 @@
     "": [
       "Microsoft.Extensions.Configuration >= 1.1.0",
       "Microsoft.Extensions.Configuration.Json >= 1.1.0",
-      "Microsoft.NETCore.App >= 1.0.1",
+      "Microsoft.NETCore.App >= 1.0.0",
       "MongoDB.Driver >= 2.4.2",
       "MongoRepository >= 1.0.0-*",
       "System.Runtime.Serialization.Primitives >= 4.1.1",
