@@ -1,0 +1,32 @@
+{
+  "version": 2,
+  "targets": {
+    ".NETFramework,Version=v4.5": {},
+    ".NETFramework,Version=v4.5/win": {}
+  },
+  "libraries": {},
+  "projectFileDependencyGroups": {
+    "": [],
+    ".NETFramework,Version=v4.5": []
+  },
+  "packageFolders": {
+    "C:\\Users\\auc-dev\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "restore": {
+      "projectUniqueName": "D:\\_data\\auc\\source\\github\\auc-cloud-dev\\MongoRepositoryNetCore\\MongoRepository\\MongoRepository.Net45.csproj",
+      "projectName": "MongoRepository.Net45",
+      "projectPath": "D:\\_data\\auc\\source\\github\\auc-cloud-dev\\MongoRepositoryNetCore\\MongoRepository\\MongoRepository.Net45.csproj",
+      "projectJsonPath": "D:\\_data\\auc\\source\\github\\auc-cloud-dev\\MongoRepositoryNetCore\\MongoRepository\\MongoRepository.Net45.project.json",
+      "projectStyle": "ProjectJson"
+    },
+    "frameworks": {
+      "net45": {}
+    },
+    "runtimes": {
+      "win": {
+        "#import": []
+      }
+    }
+  }
+}
